@@ -1,0 +1,6 @@
+{
+  "qty": "999",
+  "qtyAttrs": "<input class=\"qty-input\" type=\"text\" inputmode=\"numeric\">",
+  "totals": "Товары | 134 865,00 ₽ | Доставка | 400,00 ₽Бесплатно | Итого | 134 865,00 ₽",
+  "storage": "{\"cart\":{\"pasta\":999},\"promo\":null}"
+}

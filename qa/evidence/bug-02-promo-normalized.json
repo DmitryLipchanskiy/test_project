@@ -1,0 +1,6 @@
+{
+  "typedValue": "  Fresh_Start  ",
+  "cartText": "Корзина\nЗелёный чай листовой, 200 г\n540,50 ₽ / шт\n540,50 ₽\n−\n+\nУдалить\nПрименить\nПромокод применён.\nПрименён: fresh_start — −10%\nубрать\nТовары\n540,50 ₽\nСкидка по промокоду\n−54,05 ₽\nДоставка\n400,00 ₽\nИтого\n886,45 ₽",
+  "promoBadgeHTML": "<div class=\"promo\">\n        <div class=\"promo-row\">\n          <input class=\"promo-input\" id=\"promo-input\" type=\"text\" placeholder=\"Промокод\" autocomplete=\"off\">\n          <button class=\"promo-apply\" id=\"promo-apply\">Применить</button>\n        </div>\n        <div class=\"promo-msg ok\" id=\"promo-msg\">Промокод применён.</div>\n        <div id=\"promo-active-box\"><div class=\"promo-active\"><span>Применён: fresh_start — −10%</span><button>убрать</button></div></div>\n      </div>",
+  "storage": "{\"cart\":{\"green-tea\":1},\"promo\":\"fresh_start\"}"
+}

@@ -1,0 +1,6 @@
+{
+  "expectedBySpec": "товары 1,00 ₽ + доставка 400,00 ₽ = итого 401,00 ₽",
+  "totalsBlock": "Товары | 270,00 ₽ | Скидка по промокоду | −270,00 ₽ | Доставка | 400,00 ₽ | Итого | 400,00 ₽",
+  "totalsHTML": "<div class=\"totals\" id=\"totals\"><div class=\"row\"><span class=\"muted\">Товары</span><span>270,00 ₽</span></div><div class=\"row discount\"><span>Скидка по промокоду</span><span>−270,00 ₽</span></div><div class=\"row\"><span class=\"muted\">Доставка</span><span>400,00 ₽</span></div><div class=\"row grand\"><span>Итого</span><span>400,00 ₽</span></div></div> ",
+  "storage": "{\"cart\":{\"pasta\":2},\"promo\":\"1+1\"}"
+}
