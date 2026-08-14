@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Магазин «Наивная корзина»</title>
+  <style>
+    :root {
+      --bg: #f5f6f8;
+      --card: #ffffff;
+      --ink: #1c2430;
+      --muted: #6b7684;
+      --line: #e4e7ec;
+      --accent: #2f6f4f;
+      --accent-ink: #ffffff;
+      --danger: #c0392b;
+      --shadow: 0 1px 3px rgba(20, 30, 45, .08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.45;
+    }
+    header {
+      background: var(--card);
+      border-bottom: 1px solid var(--line);
+      padding: 18px 24px;
+    }
+    header h1 { margin: 0; font-size: 22px; }
+    header p { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
+    .layout {
+      max-width: 1080px;
+      margin: 24px auto;
+      padding: 0 24px;
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 24px;
+      align-items: start;
+    }
+    @media (max-width: 860px) {
+      .layout { grid-template-columns: 1fr; }
+    }
+    h2 { font-size: 17px; margin: 0 0 14px; }
+
+    /* Каталог */
+    .catalog {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+    @media (max-width: 520px) { .catalog { grid-template-columns: 1fr; } }
+    .product {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .product .emoji { font-size: 34px; }
+    .product .name { font-weight: 600; font-size: 14px; flex: 1; }
+    .product .price { font-size: 16px; font-weight: 700; }
+    button {
+      font: inherit;
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+    }
+    .add-btn {
+      background: var(--accent);
+      color: var(--accent-ink);
+      padding: 9px 12px;
+      font-weight: 600;
+      font-size: 14px;
+    }
+    .add-btn:hover { filter: brightness(1.06); }
+
+    /* Корзина */
+    .cart {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 20px;
+    }
+    .cart-empty { color: var(--muted); font-size: 14px; padding: 10px 0; }
+    .line {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 6px 10px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .line .l-name { font-size: 14px; font-weight: 600; }
+    .line .l-unit { font-size: 12px; color: var(--muted); }
+    .line .l-controls { display: flex; align-items: center; gap: 6px; }
+    .qty-btn {
+      width: 30px; height: 30px;
+      background: #eef1f4;
+      color: var(--ink);
+      font-size: 18px;
+      line-height: 1;
+    }
+    .qty-btn:hover { background: #e2e6ea; }
+    .qty-input {
+      width: 48px; height: 30px;
+      text-align: center;
+      font: inherit;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+    .l-sum { font-weight: 700; font-size: 14px; align-self: center; text-align: right; }
+    .del-btn {
+      background: none;
+      color: var(--danger);
+      font-size: 13px;
+      padding: 4px 2px;
+      text-decoration: underline;
+      justify-self: start;
+    }
+
+    /* Промокод */
+    .promo { margin: 16px 0; }
+    .promo-row { display: flex; gap: 8px; }
+    .promo-input {
+      flex: 1; height: 38px;
+      padding: 0 10px;
+      font: inherit;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+    .promo-apply {
+      background: var(--ink);
+      color: #fff;
+      padding: 0 16px;
+      font-weight: 600;
+      font-size: 14px;
+    }
+    .promo-msg { font-size: 13px; margin-top: 8px; min-height: 18px; }
+    .promo-msg.ok { color: var(--accent); }
+    .promo-msg.err { color: var(--danger); }
+    .promo-active {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #edf6f0; color: var(--accent);
+      border-radius: 8px; padding: 6px 10px; font-size: 13px; font-weight: 600;
+      margin-top: 8px;
+    }
+    .promo-active button {
+      background: none; color: var(--accent);
+      text-decoration: underline; font-size: 13px; padding: 0;
+    }
+
+    /* Итоги */
+    .totals { border-top: 1px solid var(--line); margin-top: 8px; padding-top: 14px; }
+    .totals .row {
+      display: flex; justify-content: space-between;
+      font-size: 14px; margin-bottom: 8px;
+    }
+    .totals .row .muted { color: var(--muted); }
+    .totals .discount { color: var(--danger); }
+    .totals .grand {
+      font-size: 19px; font-weight: 800;
+      border-top: 1px solid var(--line);
+      padding-top: 12px; margin-top: 4px;
+    }
+    .strike { text-decoration: line-through; color: var(--muted); margin-right: 6px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🛒 Наивная корзина</h1>
+    <p>Небольшой продуктовый магазин</p>
+  </header>
+
+  <div class="layout">
+    <section>
+      <h2>Каталог</h2>
+      <div class="catalog" id="catalog"></div>
+    </section>
+
+    <aside class="cart">
+      <h2>Корзина</h2>
+      <div id="cart-lines"></div>
+
+      <div class="promo">
+        <div class="promo-row">
+          <input class="promo-input" id="promo-input" type="text" placeholder="Промокод" autocomplete="off">
+          <button class="promo-apply" id="promo-apply">Применить</button>
+        </div>
+        <div class="promo-msg" id="promo-msg"></div>
+        <div id="promo-active-box"></div>
+      </div>
+
+      <div class="totals" id="totals"></div>
+    </aside>
+  </div>
+
+  <script>
+    "use strict";
+
+    // ---- Конфигурация ----
+    const DELIVERY_BASE = 40000;          // 400,00 ₽ в копейках
+    const FREE_FROM     = 300000;         // от 3000 ₽ — бесплатно
+    const DISCOUNT_FROM = 200000;         // от 2000 ₽ — скидка 25% на доставку
+    const DELIVERY_DISCOUNT = 0.25;
+
+    const PROMOS = {
+      "fresh_start": { type: "percent", value: 10,   label: "fresh_start — −10%" },
+      "hotweekend":  { type: "percent", value: 50,   label: "hotweekend — −50%" },
+      "1+1":         { type: "fixed",   value: 50000, label: "1+1 — −500 ₽" }
+    };
+
+    const STORAGE_KEY = "naive-cart-state-v1";
+
+    // ---- Состояние ----
+    let products = [];
+    // cart: { [id]: qty }
+    let state = loadState();
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return { cart: {}, promo: null };
+        const parsed = JSON.parse(raw);
+        return {
+          cart: (parsed && typeof parsed.cart === "object" && parsed.cart) ? parsed.cart : {},
+          promo: (parsed && parsed.promo && PROMOS[parsed.promo]) ? parsed.promo : null
+        };
+      } catch (e) {
+        return { cart: {}, promo: null };
+      }
+    }
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    // ---- Деньги ----
+    // Все внутренние суммы — в копейках (целые числа), чтобы не терять точность.
+    function toKopecks(rubles) { return Math.round(rubles * 100); }
+    function formatMoney(kop) {
+      const sign = kop < 0 ? "−" : "";
+      const abs = Math.abs(kop);
+      const rub = Math.floor(abs / 100);
+      const cop = abs % 100;
+      const rubStr = rub.toLocaleString("ru-RU");
+      return sign + rubStr + "," + String(cop).padStart(2, "0") + " ₽";
+    }
+
+    function productById(id) { return products.find(p => p.id === id); }
+
+    // ---- Расчёты ----
+    function computeTotals() {
+      let subtotal = 0;
+      for (const id in state.cart) {
+        const p = productById(id);
+        if (!p) continue;
+        subtotal += p.priceKop * state.cart[id];
+      }
+
+      // Скидка по промокоду (на сумму товаров)
+      let promoDiscount = 0;
+      if (state.promo && PROMOS[state.promo] && subtotal > 0) {
+        const promo = PROMOS[state.promo];
+        if (promo.type === "percent") {
+          promoDiscount = Math.round(subtotal * promo.value / 100);
+        } else {
+          promoDiscount = Math.min(promo.value, subtotal);
+        }
+      }
+
+      // Стоимость доставки — по сумме товаров
+      let delivery = 0;
+      let deliveryBaseShown = DELIVERY_BASE;
+      if (subtotal === 0) {
+        delivery = 0;
+        deliveryBaseShown = 0;
+      } else if (subtotal >= FREE_FROM) {
+        delivery = 0;
+      } else if (subtotal >= DISCOUNT_FROM) {
+        delivery = Math.round(DELIVERY_BASE * (1 - DELIVERY_DISCOUNT));
+      } else {
+        delivery = DELIVERY_BASE;
+      }
+
+      const total = Math.max(0, subtotal - promoDiscount) + delivery;
+
+      return { subtotal, promoDiscount, delivery, deliveryBaseShown, total };
+    }
+
+    // ---- Рендер каталога ----
+    function renderCatalog() {
+      const el = document.getElementById("catalog");
+      el.innerHTML = "";
+      products.forEach(p => {
+        const card = document.createElement("div");
+        card.className = "product";
+        card.innerHTML =
+          '<div class="emoji">' + (p.emoji || "📦") + '</div>' +
+          '<div class="name"></div>' +
+          '<div class="price"></div>' +
+          '<button class="add-btn">В корзину</button>';
+        card.querySelector(".name").textContent = p.title;
+        card.querySelector(".price").textContent = formatMoney(p.priceKop);
+        card.querySelector(".add-btn").addEventListener("click", () => addToCart(p.id));
+        el.appendChild(card);
+      });
+    }
+
+    // ---- Рендер корзины ----
+    function renderCart() {
+      const linesEl = document.getElementById("cart-lines");
+      linesEl.innerHTML = "";
+
+      const ids = Object.keys(state.cart);
+      if (ids.length === 0) {
+        const empty = document.createElement("div");
+        empty.className = "cart-empty";
+        empty.textContent = "Корзина пуста. Добавьте товары из каталога.";
+        linesEl.appendChild(empty);
+      }
+
+      ids.forEach(id => {
+        const p = productById(id);
+        if (!p) return;
+        const qty = state.cart[id];
+
+        const line = document.createElement("div");
+        line.className = "line";
+
+        const info = document.createElement("div");
+        info.innerHTML = '<div class="l-name"></div><div class="l-unit"></div>';
+        info.querySelector(".l-name").textContent = p.title;
+        info.querySelector(".l-unit").textContent = formatMoney(p.priceKop) + " / шт";
+
+        const sum = document.createElement("div");
+        sum.className = "l-sum";
+        sum.textContent = formatMoney(p.priceKop * qty);
+
+        const controls = document.createElement("div");
+        controls.className = "l-controls";
+
+        const minus = document.createElement("button");
+        minus.className = "qty-btn";
+        minus.textContent = "−";
+        minus.addEventListener("click", () => changeQty(id, qty - 1));
+
+        const input = document.createElement("input");
+        input.className = "qty-input";
+        input.type = "text";
+        input.inputMode = "numeric";
+        input.value = qty;
+        input.addEventListener("change", () => {
+          const n = parseInt(input.value, 10);
+          if (isNaN(n)) { input.value = qty; return; }
+          changeQty(id, n);
+        });
+
+        const plus = document.createElement("button");
+        plus.className = "qty-btn";
+        plus.textContent = "+";
+        plus.addEventListener("click", () => changeQty(id, qty + 1));
+
+        controls.appendChild(minus);
+        controls.appendChild(input);
+        controls.appendChild(plus);
+
+        const del = document.createElement("button");
+        del.className = "del-btn";
+        del.textContent = "Удалить";
+        del.addEventListener("click", () => removeFromCart(id));
+
+        line.appendChild(info);
+        line.appendChild(sum);
+        line.appendChild(controls);
+        line.appendChild(del);
+        linesEl.appendChild(line);
+      });
+
+      renderPromoActive();
+      renderTotals();
+    }
+
+    function renderPromoActive() {
+      const box = document.getElementById("promo-active-box");
+      box.innerHTML = "";
+      if (state.promo && PROMOS[state.promo]) {
+        const div = document.createElement("div");
+        div.className = "promo-active";
+        const span = document.createElement("span");
+        span.textContent = "Применён: " + PROMOS[state.promo].label;
+        const btn = document.createElement("button");
+        btn.textContent = "убрать";
+        btn.addEventListener("click", removePromo);
+        div.appendChild(span);
+        div.appendChild(btn);
+        box.appendChild(div);
+      }
+    }
+
+    function renderTotals() {
+      const t = computeTotals();
+      const el = document.getElementById("totals");
+
+      let deliveryStr;
+      if (t.subtotal === 0) {
+        deliveryStr = "—";
+      } else if (t.delivery === 0) {
+        deliveryStr = '<span class="strike">' + formatMoney(DELIVERY_BASE) + "</span>Бесплатно";
+      } else if (t.delivery < DELIVERY_BASE) {
+        deliveryStr = '<span class="strike">' + formatMoney(DELIVERY_BASE) + "</span>" + formatMoney(t.delivery);
+      } else {
+        deliveryStr = formatMoney(t.delivery);
+      }
+
+      let html = "";
+      html += '<div class="row"><span class="muted">Товары</span><span>' + formatMoney(t.subtotal) + "</span></div>";
+      if (t.promoDiscount > 0) {
+        html += '<div class="row discount"><span>Скидка по промокоду</span><span>−' + formatMoney(t.promoDiscount) + "</span></div>";
+      }
+      html += '<div class="row"><span class="muted">Доставка</span><span>' + deliveryStr + "</span></div>";
+      html += '<div class="row grand"><span>Итого</span><span>' + formatMoney(t.total) + "</span></div>";
+
+      el.innerHTML = html;
+    }
+
+    // ---- Действия ----
+    function addToCart(id) {
+      state.cart[id] = (state.cart[id] || 0) + 1;
+      persistAndRender();
+    }
+    function changeQty(id, n) {
+      n = Math.floor(n);
+      if (isNaN(n) || n <= 0) {
+        delete state.cart[id];
+      } else {
+        state.cart[id] = Math.min(n, 999);
+      }
+      persistAndRender();
+    }
+    function removeFromCart(id) {
+      delete state.cart[id];
+      persistAndRender();
+    }
+
+    function applyPromo() {
+      const input = document.getElementById("promo-input");
+      const msg = document.getElementById("promo-msg");
+      const code = input.value.trim().toLowerCase();
+
+      if (!code) {
+        msg.className = "promo-msg err";
+        msg.textContent = "Введите промокод.";
+        return;
+      }
+      if (!PROMOS[code]) {
+        msg.className = "promo-msg err";
+        msg.textContent = "Такого промокода нет.";
+        return;
+      }
+      state.promo = code;
+      input.value = "";
+      msg.className = "promo-msg ok";
+      msg.textContent = "Промокод применён.";
+      persistAndRender();
+    }
+    function removePromo() {
+      state.promo = null;
+      const msg = document.getElementById("promo-msg");
+      msg.className = "promo-msg";
+      msg.textContent = "";
+      persistAndRender();
+    }
+
+    function persistAndRender() {
+      saveState();
+      renderCart();
+    }
+
+    // ---- Инициализация ----
+    document.getElementById("promo-apply").addEventListener("click", applyPromo);
+    document.getElementById("promo-input").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") applyPromo();
+    });
+
+    fetch("products.json")
+      .then(r => {
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        return r.json();
+      })
+      .then(data => {
+        products = data.map(p => ({
+          id: p.id,
+          title: p.title,
+          emoji: p.emoji,
+          priceKop: toKopecks(p.price)
+        }));
+        // Убираем из корзины товары, которых больше нет в каталоге
+        for (const id in state.cart) {
+          if (!productById(id)) delete state.cart[id];
+        }
+        renderCatalog();
+        renderCart();
+      })
+      .catch(err => {
+        document.getElementById("catalog").innerHTML =
+          '<div class="cart-empty">Не удалось загрузить товары: ' + err.message + "</div>";
+      });
+  </script>
+</body>
+</html>
