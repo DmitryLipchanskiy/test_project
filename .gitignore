@@ -1,2 +1,8 @@
 # Служебная папка Playwright MCP: снапшоты, логи консоли, временные страницы
 .playwright-mcp/
+
+# Зависимости и артефакты прогонов Playwright.
+# package.json и package-lock.json коммитятся: по ним воспроизводится окружение.
+node_modules/
+test-results/
+playwright-report/

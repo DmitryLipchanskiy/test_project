@@ -1,0 +1,24 @@
+{
+  "name": "testtask",
+  "version": "1.0.0",
+  "description": "**Работайте прямо в этой папке.** Здесь уже лежат правила, по которым будет работать ваш агент, материалы занятия и заготовки файлов, которые вы сдадите.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DmitryLipchanskiy/test_project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/DmitryLipchanskiy/test_project/issues"
+  },
+  "homepage": "https://github.com/DmitryLipchanskiy/test_project#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.62.1"
+  }
+}
