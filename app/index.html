@@ -271,7 +271,7 @@
         if (promo.type === "percent") {
           promoDiscount = Math.round(subtotal * promo.value / 100);
         } else {
-          promoDiscount = Math.min(promo.value, subtotal);
+          promoDiscount = Math.min(promo.value, subtotal - 100);
         }
       }
 

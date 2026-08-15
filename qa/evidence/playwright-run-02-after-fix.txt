@@ -1,0 +1,113 @@
+
+Running 4 tests using 4 workers
+
+  ✓  3 tests/bug-03-discount-floor.spec.ts:11:5 › BUG-03: скидка больше корзины оставляет 1 ₽ за товары (865ms)
+  ✘  2 tests/bug-01-quantity-cap.spec.ts:10:5 › BUG-01: количество не поднимается выше 99 (891ms)
+  ✘  1 tests/bug-02-promo-exact-match.spec.ts:10:5 › BUG-02: промокод сравнивается точно, без trim и приведения регистра (5.8s)
+  ✘  4 tests/bug-04-empty-cart-promo.spec.ts:11:5 › BUG-04: удаление всех товаров снимает применённую скидку (5.9s)
+
+
+  1) tests/bug-01-quantity-cap.spec.ts:10:5 › BUG-01: количество не поднимается выше 99 › «+» на потолке не увеличивает количество 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "99"
+    Received: "100"
+
+      23 |   await test.step('«+» на потолке не увеличивает количество', async () => {
+      24 |     await cart.increaseQuantity(PASTA);
+    > 25 |     expect(await cart.quantityValue(PASTA)).toBe('99');
+         |                                             ^
+      26 |   });
+      27 |
+      28 |   await test.step('ручной ввод выше потолка обрезается до 99', async () => {
+        at /Users/qamac/Downloads/TestTask/tests/bug-01-quantity-cap.spec.ts:25:45
+        at /Users/qamac/Downloads/TestTask/tests/bug-01-quantity-cap.spec.ts:23:3
+
+    Error Context: test-results/bug-01-quantity-cap-BUG-01-количество-не-поднимается-выше-99/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/bug-01-quantity-cap-BUG-01-количество-не-поднимается-выше-99/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/bug-01-quantity-cap-BUG-01-количество-не-поднимается-выше-99/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) tests/bug-02-promo-exact-match.spec.ts:10:5 › BUG-02: промокод сравнивается точно, без trim и приведения регистра › код "FRESH_START" не должен применяться 
+
+    Error: expect(locator).toBeHidden() failed
+
+    Locator:  locator('#promo-active-box .promo-active')
+    Expected: hidden
+    Received: visible
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeHidden" with timeout 5000ms
+      - waiting for locator('#promo-active-box .promo-active')
+        14 × locator resolved to <div class="promo-active">…</div>
+           - unexpected value "visible"
+
+
+      22 |
+      23 |       // Скидки нет, итог равен товарам плюс доставка.
+    > 24 |       await expect(cart.promoActiveBadge).toBeHidden();
+         |                                           ^
+      25 |       expect(await cart.amountValue('Итого')).toBe(940.5);
+      26 |
+      27 |       const state = await cart.storedState();
+        at /Users/qamac/Downloads/TestTask/tests/bug-02-promo-exact-match.spec.ts:24:43
+        at /Users/qamac/Downloads/TestTask/tests/bug-02-promo-exact-match.spec.ts:20:5
+
+    Error Context: test-results/bug-02-promo-exact-match-B-52d85--trim-и-приведения-регистра/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/bug-02-promo-exact-match-B-52d85--trim-и-приведения-регистра/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/bug-02-promo-exact-match-B-52d85--trim-и-приведения-регистра/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) tests/bug-04-empty-cart-promo.spec.ts:11:5 › BUG-04: удаление всех товаров снимает применённую скидку › после удаления всех товаров скидка снимается 
+
+    Error: expect(locator).toBeHidden() failed
+
+    Locator:  locator('#promo-active-box .promo-active')
+    Expected: hidden
+    Received: visible
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toBeHidden" with timeout 5000ms
+      - waiting for locator('#promo-active-box .promo-active')
+        14 × locator resolved to <div class="promo-active">…</div>
+           - unexpected value "visible"
+
+
+      26 |
+      27 |     await expect(cart.emptyMessage).toHaveText('Корзина пуста. Добавьте товары из каталога.');
+    > 28 |     await expect(cart.promoActiveBadge).toBeHidden();
+         |                                         ^
+      29 |
+      30 |     const state = await cart.storedState();
+      31 |     expect(state.promo).toBeNull();
+        at /Users/qamac/Downloads/TestTask/tests/bug-04-empty-cart-promo.spec.ts:28:41
+        at /Users/qamac/Downloads/TestTask/tests/bug-04-empty-cart-promo.spec.ts:24:3
+
+    Error Context: test-results/bug-04-empty-cart-promo-BU-5ce52--снимает-применённую-скидку/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/bug-04-empty-cart-promo-BU-5ce52--снимает-применённую-скидку/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/bug-04-empty-cart-promo-BU-5ce52--снимает-применённую-скидку/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    tests/bug-01-quantity-cap.spec.ts:10:5 › BUG-01: количество не поднимается выше 99 ─────────────
+    tests/bug-02-promo-exact-match.spec.ts:10:5 › BUG-02: промокод сравнивается точно, без trim и приведения регистра 
+    tests/bug-04-empty-cart-promo.spec.ts:11:5 › BUG-04: удаление всех товаров снимает применённую скидку 
+  1 passed (7.0s)
