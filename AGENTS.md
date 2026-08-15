@@ -209,6 +209,21 @@ python3 -m http.server 8765
 curl -sI http://localhost:8765/app/index.html | head -1
 ```
 
+**На Windows команды отличаются, и молча.** `python3` не существует — нужен
+`python` (вызов `python3` уходит в заглушку Microsoft Store и падает с `exit 9009`).
+`curl` в PowerShell — это алиас `Invoke-WebRequest`, он не понимает ни `-sI`,
+ни конвейер в `head`; нужен явный `curl.exe`:
+
+```powershell
+python -m http.server 8765
+curl.exe -sI http://localhost:8765/app/index.html | Select-Object -First 1
+Get-NetTCPConnection -LocalPort 8765 -State Listen | Select-Object OwningProcess
+```
+
+Опаснее всего здесь `curl`: подмена алиасом не падает громко, и ошибку
+разбора аргументов легко принять за недоступный стенд. Проверено прогоном
+на чистой Windows 11 — `qa/evidence/clean-machine-report.md`.
+
 ```bash
 # установка Playwright (один раз, фиксируется в sessions/TOOLS.md)
 npm init -y && npm install -D @playwright/test && npx playwright install chromium
